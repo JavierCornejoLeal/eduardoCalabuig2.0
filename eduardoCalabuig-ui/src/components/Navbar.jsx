@@ -5,7 +5,6 @@ import { HiBars3BottomRight } from "react-icons/hi2";
 import { useLocation, useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 
-import api from "../utils/api";
 
 import "../assets/styles/Navbar.css";
 import logoMarron from "../assets/images/logo/logo.webp";
