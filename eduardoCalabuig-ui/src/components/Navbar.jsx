@@ -1,26 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
-import { PiShoppingCartThin, PiUserLight, PiX } from "react-icons/pi";
+import { PiX } from "react-icons/pi";
 import { HiBars3BottomRight } from "react-icons/hi2";
 import { useLocation, useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 
 import api from "../utils/api";
-import { IoIosLogOut } from "react-icons/io";
 
 import "../assets/styles/Navbar.css";
 import logoMarron from "../assets/images/logo/logo.webp";
 import logoNegro from "../assets/images/logo/logoNegro.webp";
 
-import CartPanel from "./CartPanel";
 
-const NavBar = ({ carrito = [], alwaysLight = false }) => {
+const NavBar = ({ alwaysLight = false }) => {
   const [scrolled, setScrolled] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [showCartPanel, setShowCartPanel] = useState(false);
   const [navbarHeight, setNavbarHeight] = useState(window.innerHeight * 0.08);
-  const [userName, setUserName] = useState(null);
-  const [totalCartItems, setTotalCartItems] = useState(0);
 
   const location = useLocation();
   const currentPath = location.pathname + location.hash;
@@ -45,52 +41,6 @@ const NavBar = ({ carrito = [], alwaysLight = false }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    const user = sessionStorage.getItem("user");
-    if (user) {
-      const parsedUser = JSON.parse(user);
-      setUserName(parsedUser.name);
-
-      const carritoId = parsedUser.carrito_id;
-      if (carritoId) {
-        const fetchCartItems = () => {
-          api
-            .getData(`carritos/${carritoId}/productos`)
-            .then((response) => {
-              let productosArray = [];
-
-              if (Array.isArray(response.data.productos)) {
-                productosArray = response.data.productos;
-              }
-              else if (Array.isArray(response.data.data)) {
-                productosArray = response.data.data;
-              }
-              else if (Array.isArray(response.data)) {
-                productosArray = response.data;
-              }
-              const totalItems = productosArray.reduce(
-                (acc, item) => acc + (item.pivot?.cantidad || 0),
-                0
-              );
-              setTotalCartItems(totalItems);
-            })
-            .catch((error) => {
-              console.error(
-                "Error al obtener los productos del carrito:",
-                error
-              );
-              setTotalCartItems(0);
-            });
-        };
-
-        fetchCartItems();
-
-        const interval = setInterval(fetchCartItems, 5000);
-        return () => clearInterval(interval);
-      }
-    }
-  }, []);
-
   const isLight = alwaysLight || scrolled || expanded || showCartPanel;
 
   const links = [
@@ -98,14 +48,7 @@ const NavBar = ({ carrito = [], alwaysLight = false }) => {
     { text: "PROYECTOS", to: "/proyectos" },
     { text: "NOTICIAS", to: "/noticias" },
     { text: "CONTACTO", to: "/contacto" },
-    { text: "PRODUCTOS", to: "/productos" },
   ];
-
-  const logout = async () => {
-    sessionStorage.removeItem("auth_token");
-    sessionStorage.removeItem("user");
-    navigate("/");
-  };
 
   return (
     <>
@@ -139,7 +82,7 @@ const NavBar = ({ carrito = [], alwaysLight = false }) => {
 
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav
-              className="ms-auto align-items-center gap-3"
+              className="ms-auto align-items-center gap-5"
               style={{ color: isLight ? "black" : "white" }}
             >
               {links.map(({ text, to, isHash }, idx) => {
@@ -179,59 +122,6 @@ const NavBar = ({ carrito = [], alwaysLight = false }) => {
                   </Nav.Link>
                 );
               })}
-
-              <Nav.Link
-                onClick={() => setShowCartPanel(!showCartPanel)}
-                className={expanded ? "text-link" : "position-relative"}
-                style={{
-                  color: isLight ? "black" : "white",
-                  cursor: "pointer",
-                }}
-                aria-label="Mostrar carrito"
-                aria-expanded={showCartPanel}
-              >
-                {expanded ? (
-                  <>
-                    CARRITO
-                    <span className="cart-badge-horizontal ms-2">
-                      {totalCartItems}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <PiShoppingCartThin size={30} />
-                    <span className="cart-badge">{totalCartItems}</span>
-                  </>
-                )}
-              </Nav.Link>
-
-              {userName ? (
-                <>
-                  <Nav.Link
-                    href="/login"
-                    className={expanded ? "text-link" : ""}
-                    style={{ color: isLight ? "black" : "white" }}
-                  >
-                    {userName.toUpperCase()}
-                  </Nav.Link>
-                  <Nav.Link
-                    href="/"
-                    className={expanded ? "text-link" : ""}
-                    style={{ color: isLight ? "black" : "white" }}
-                    onClick={() => logout()}
-                  >
-                    {expanded ? "CERRAR SESIÓN" : <IoIosLogOut size={25} />}
-                  </Nav.Link>
-                </>
-              ) : (
-                <Nav.Link
-                  href="/login"
-                  className={expanded ? "text-link" : ""}
-                  style={{ color: isLight ? "black" : "white" }}
-                >
-                  {expanded ? "INICIO SESIÓN" : <PiUserLight size={30} />}
-                </Nav.Link>
-              )}
             </Nav>
           </Navbar.Collapse>
         </Container>

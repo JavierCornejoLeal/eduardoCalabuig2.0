@@ -10,18 +10,13 @@ import Contacto from "./pages/Contacto";
 import Proyectos from "./pages/Proyectos";
 import ExteriorIbizenco from "./pages/Projects/ExteriorIbizenco";
 import Cocina from "./pages/Projects/Cocina";
-import LogIn from "./pages/Login";
-import Register from "./pages/Register";
 import Noticias from "./pages/Noticias";
 import EstiloIbizenco from "./pages/Notices/EstiloIbizenco";
 import Error404 from "./pages/Error404";
-import Productos from "./pages/Productos";
-import ProductoDetallado from "./pages/Products/ProductoDetallado";
 import AvisoLegal from "./pages/AvisoLegal";
 import PoliticaCookies from "./pages/PoliticaCookies";
 import Privacidad from "./pages/Privacidad";
 import TerminosCondiciones from "./pages/TerminosCondiciones";
-import PasarelaPago from "./pages/PasarelaPago";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -136,68 +131,7 @@ function AnimatedRoutes() {
               </motion.div>
             }
           />
-          <Route
-            path="/productos"
-            element={
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 50 }}
-                transition={pageTransition}
-              >
-                <Productos />
-              </motion.div>
-            }
-          />
-          <Route
-            path="/productos/:slug"
-            element={
-              <>
-                <ProductoDetallado />
-              </>
-            }
-          />
 
-          <Route
-            path="/pago"
-            element={
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 50 }}
-                transition={pageTransition}
-              >
-                <PasarelaPago />
-              </motion.div>
-            }
-          />
-
-          <Route
-            path="/login"
-            element={
-              <motion.div
-                initial={{ opacity: 0, x: -100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 100 }}
-                transition={pageTransition}
-              >
-                <LogIn />
-              </motion.div>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <motion.div
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -100 }}
-                transition={pageTransition}
-              >
-                <Register />
-              </motion.div>
-            }
-          />
           <Route
             path="/avisoLegal"
             element={
